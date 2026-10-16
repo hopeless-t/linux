@@ -102,9 +102,9 @@ static inline int __virtio_net_hdr_to_skb(struct sk_buff *skb,
 		if (!pskb_may_pull(skb, needed))
 			return -EINVAL;
 
-		if (!skb_partial_csum_set(skb, start, off))
+		if (start < nh_min_len)
 			return -EINVAL;
-		if (skb_transport_offset(skb) < nh_min_len)
+		if (!skb_partial_csum_set(skb, start, off))
 			return -EINVAL;
 
 		nh_min_len = skb_transport_offset(skb);
